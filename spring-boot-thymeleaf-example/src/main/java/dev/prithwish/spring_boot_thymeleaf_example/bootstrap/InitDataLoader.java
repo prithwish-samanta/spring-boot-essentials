@@ -26,23 +26,27 @@ public class InitDataLoader implements CommandLineRunner {
             Blog blog1 = new Blog();
             blog1.setTitle("Man must explore, and this is exploration at its greatest");
             blog1.setSubTitle("Problems look mighty small from 150 miles up");
+            blog1.setBgImage("post-bg.jpg");
             blog1.setCreatedBy("MindLog");
             blogRepository.save(blog1);
 
             Blog blog2 = new Blog();
             blog2.setTitle("I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.");
+            blog2.setBgImage("post-bg.jpg");
             blog2.setCreatedBy("MindLog");
             blogRepository.save(blog2);
 
             Blog blog3 = new Blog();
             blog3.setTitle("Science has not yet mastered prophecy");
             blog3.setSubTitle("We predict too much for the next year and yet far too little for the next ten.");
+            blog3.setBgImage("post-bg.jpg");
             blog3.setCreatedBy("MindLog");
             blogRepository.save(blog3);
 
             Blog blog4 = new Blog();
             blog4.setTitle("Failure is not an option");
             blog4.setSubTitle("Many say exploration is part of our destiny, but it’s actually our duty to future generations.");
+            blog4.setBgImage("post-bg.jpg");
             blog4.setCreatedBy("MindLog");
             blogRepository.save(blog4);
 

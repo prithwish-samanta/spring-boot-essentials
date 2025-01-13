@@ -15,6 +15,7 @@ public class Blog {
     private UUID id;
     private String title;
     private String subTitle;
+    private String bgImage;
     private String createdBy;
     @CreationTimestamp
     private Date publishedDate;
@@ -22,10 +23,11 @@ public class Blog {
     public Blog() {
     }
 
-    public Blog(UUID id, String title, String subTitle, String createdBy, Date publishedDate) {
+    public Blog(UUID id, String title, String subTitle, String bgImage, String createdBy, Date publishedDate) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
+        this.bgImage = bgImage;
         this.createdBy = createdBy;
         this.publishedDate = publishedDate;
     }
@@ -52,6 +54,14 @@ public class Blog {
 
     public void setSubTitle(String subTitle) {
         this.subTitle = subTitle;
+    }
+
+    public String getBgImage() {
+        return bgImage;
+    }
+
+    public void setBgImage(String bgImage) {
+        this.bgImage = bgImage;
     }
 
     public String getCreatedBy() {
