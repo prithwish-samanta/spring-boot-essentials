@@ -21,6 +21,9 @@ public class ApiController {
     public String home(Model model) {
         model.addAttribute("blogs", blogService.getRecentBlogs());
         model.addAttribute("copyrightYear", LocalDate.now().getYear());
+        model.addAttribute("pageHeaderFilename", "home-bg.jpg");
+        model.addAttribute("pageHeaderTitle", "MindLog");
+        model.addAttribute("pageHeaderSubtitle", "Stories, Thoughts, and Ideas Worth Sharing");
         return "index";
     }
 
@@ -28,6 +31,9 @@ public class ApiController {
     public String posts(Model model) {
         model.addAttribute("blogs", blogService.getAllBlogs());
         model.addAttribute("copyrightYear", LocalDate.now().getYear());
+        model.addAttribute("pageHeaderFilename", "home-bg.jpg");
+        model.addAttribute("pageHeaderTitle", "My Blogs");
+        model.addAttribute("pageHeaderSubtitle", "Please share my blog, if you like");
         return "blogs-list";
     }
 
@@ -41,12 +47,18 @@ public class ApiController {
     @GetMapping("/about-me")
     public String aboutMe(Model model) {
         model.addAttribute("copyrightYear", LocalDate.now().getYear());
+        model.addAttribute("pageHeaderFilename", "about-bg.jpg");
+        model.addAttribute("pageHeaderTitle", "About Me");
+        model.addAttribute("pageHeaderSubtitle", "This is what I do.");
         return "about-me";
     }
 
     @GetMapping("/contact")
     public String contact(Model model) {
         model.addAttribute("copyrightYear", LocalDate.now().getYear());
+        model.addAttribute("pageHeaderFilename", "contact-bg.jpg");
+        model.addAttribute("pageHeaderTitle", "Contact Me");
+        model.addAttribute("pageHeaderSubtitle", "Have questions? I have answers.");
         return "contact";
     }
 }

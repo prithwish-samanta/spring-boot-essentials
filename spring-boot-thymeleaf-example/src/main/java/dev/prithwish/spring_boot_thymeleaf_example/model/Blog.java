@@ -5,7 +5,7 @@ import jakarta.persistence.Id;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -17,12 +17,12 @@ public class Blog {
     private String subTitle;
     private String createdBy;
     @CreationTimestamp
-    private LocalDateTime publishedDate;
+    private Date publishedDate;
 
     public Blog() {
     }
 
-    public Blog(UUID id, String title, String subTitle, String createdBy, LocalDateTime publishedDate) {
+    public Blog(UUID id, String title, String subTitle, String createdBy, Date publishedDate) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
@@ -62,11 +62,11 @@ public class Blog {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getPublishedDate() {
+    public Date getPublishedDate() {
         return publishedDate;
     }
 
-    public void setPublishedDate(LocalDateTime publishedDate) {
+    public void setPublishedDate(Date publishedDate) {
         this.publishedDate = publishedDate;
     }
 }
