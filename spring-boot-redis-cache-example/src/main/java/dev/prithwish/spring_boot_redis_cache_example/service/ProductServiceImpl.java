@@ -8,6 +8,11 @@ import dev.prithwish.spring_boot_redis_cache_example.mapper.ProductMapper;
 import dev.prithwish.spring_boot_redis_cache_example.payload.ProductDto;
 import dev.prithwish.spring_boot_redis_cache_example.repository.CategoryRepository;
 import dev.prithwish.spring_boot_redis_cache_example.repository.ProductRepository;
+import dev.prithwish.spring_boot_redis_cache_example.utils.Constants;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -25,12 +30,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = Constants.PRODUCT_LIST_KEY_PREFIX)
     public List<ProductDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(ProductMapper::mapToProductDto).toList();
     }
 
     @Override
+    @CacheEvict(value = Constants.PRODUCT_LIST_KEY_PREFIX, allEntries = true)
     public ProductDto saveProduct(ProductDto dto) {
         if (!StringUtils.hasText(dto.getCategory().getId().toString())) {
             throw new InvalidUserInputException("Category id is required");
@@ -44,12 +51,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = Constants.PRODUCT_KEY_PREFIX, key = "#productId")
     public ProductDto getProductById(UUID productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ItemNotFoundException("Product not found with id: " + productId));
         return ProductMapper.mapToProductDto(product);
     }
 
     @Override
+    @Caching(
+            evict = {@CacheEvict(value = Constants.PRODUCT_LIST_KEY_PREFIX, allEntries = true)},
+            put = {@CachePut(value = Constants.PRODUCT_KEY_PREFIX, key = "#productId")}
+    )
     public ProductDto updateProduct(UUID productId, ProductDto dto) {
         Product oldProduct = productRepository.findById(productId).orElseThrow(() -> new ItemNotFoundException("Product not found with id: " + productId));
         if (StringUtils.hasText(dto.getName())) {
@@ -64,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
         if (dto.getStock() != null) {
             oldProduct.setStock(dto.getStock());
         }
-        if (StringUtils.hasText(dto.getCategory().getId().toString())) {
+        if (dto.getCategory() != null && dto.getCategory().getId() != null && StringUtils.hasText(dto.getCategory().getId().toString())) {
             Category category = categoryRepository.findById(dto.getCategory().getId())
                     .orElseThrow(() -> new ItemNotFoundException("Category not found with id: " + dto.getCategory().getId()));
             oldProduct.setCategory(category);
@@ -73,12 +85,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = Constants.PRODUCT_LIST_KEY_PREFIX, allEntries = true),
+                    @CacheEvict(value = Constants.PRODUCT_KEY_PREFIX, key = "#productId")
+            }
+    )
     public void deleteProduct(UUID productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ItemNotFoundException("Product not found with id: " + productId));
         productRepository.delete(product);
     }
 
     @Override
+    @Caching(
+            evict = {@CacheEvict(value = Constants.PRODUCT_LIST_KEY_PREFIX, allEntries = true)},
+            put = {@CachePut(value = Constants.PRODUCT_KEY_PREFIX, key = "#productId")}
+    )
     public void updateInventory(UUID productId, Integer inventory) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ItemNotFoundException("Product not found with id: " + productId));
         product.setStock(inventory);
@@ -86,6 +108,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = Constants.PRODUCT_KEY_PREFIX, key = "#keyword")
     public List<ProductDto> searchProduct(String keyword) {
         List<Product> products = productRepository.findByNameLikeIgnoreCase("%" + keyword + "%");
         return products.stream().map(ProductMapper::mapToProductDto).toList();

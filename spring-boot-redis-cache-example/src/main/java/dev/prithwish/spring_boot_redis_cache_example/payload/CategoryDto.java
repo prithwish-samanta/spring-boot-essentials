@@ -1,8 +1,9 @@
 package dev.prithwish.spring_boot_redis_cache_example.payload;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class CategoryDto {
+public class CategoryDto implements Serializable {
     private UUID id;
     private String name;
 
